@@ -85,7 +85,7 @@ const submitLog = asyncHandler(async (req, res) => {
   }
 
   // ── 2. Duplicate check ────────────────────────────────────────────────────
-  const existingLog = await Log.findOne({ user: userId, logDate: targetDate });
+  const existingLog = await Log.findOne({ user: userId, logDate: targetDate }).select('_id').lean();
   if (existingLog) {
     return res.status(409).json({
       success: false,
@@ -142,7 +142,8 @@ const submitLog = asyncHandler(async (req, res) => {
   const recentLogs = await Log.find({ user: userId })
     .sort({ logDate: -1 })
     .limit(30)
-    .select('diet transport energy.electricityKwh');
+    .select('diet transport energy.electricityKwh')
+    .lean();
 
   const streakContext = deriveStreakContext(recentLogs, { diet, transport, energy });
 
@@ -445,7 +446,8 @@ const getDashboard = asyncHandler(async (req, res) => {
     Log.find({ user: userId, logDate: { $gte: sevenDaysAgo } })
       .sort({ logDate: -1 })
       .limit(7)
-      .select('logDate calculatedCarbonKg breakdown beatBaseline xpAwarded'),
+      .select('logDate calculatedCarbonKg breakdown beatBaseline xpAwarded')
+      .lean(),
   ]);
 
   if (!user) {

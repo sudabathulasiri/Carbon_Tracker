@@ -99,7 +99,7 @@ const register = asyncHandler(async (req, res) => {
 
   // Guard: check for duplicate email before letting Mongoose throw a 11000
   // so we can return a cleaner message.
-  const existing = await User.findOne({ email: email.toLowerCase().trim() });
+  const existing = await User.findOne({ email: email.toLowerCase().trim() }).select('_id').lean();
   if (existing) {
     return res.status(409).json({
       success: false,
