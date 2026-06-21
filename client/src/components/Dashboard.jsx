@@ -203,7 +203,7 @@ const Dashboard = () => {
     }
     localStorage.removeItem('ct_token');
     localStorage.removeItem('ct_user');
-    window.location.href = '/auth';
+    window.location.href = '/';
   }, []);
 
   // ── Data fetch ──────────────────────────────────────────────────────────
