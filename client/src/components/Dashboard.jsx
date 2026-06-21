@@ -19,7 +19,7 @@ import CarbonLogForm  from './tracker/CarbonLogForm.jsx';
 import {
   MetricCard, BadgeChip, XPBar, Skeleton, EmptyState, SectionLabel,
 } from './ui/index.jsx';
-import { carbonApi } from '../services/api.js';
+import { carbonApi, authApi } from '../services/api.js';
 
 // ─── Toast notification (inline, no library) ──────────────────────────────────
 
@@ -193,6 +193,19 @@ const Dashboard = () => {
   const [showForm,   setShowForm]   = useState(false);
   const [toast,      setToast]      = useState(null);
 
+  // ── Logout handler ───────────────────────────────────────────────────────
+
+  const handleLogout = useCallback(async () => {
+    try {
+      await authApi.logout();
+    } catch (err) {
+      // Force clear local credentials regardless of API status
+    }
+    localStorage.removeItem('ct_token');
+    localStorage.removeItem('ct_user');
+    window.location.href = '/auth';
+  }, []);
+
   // ── Data fetch ──────────────────────────────────────────────────────────
 
   const fetchDashboard = useCallback(async () => {
@@ -333,6 +346,16 @@ const Dashboard = () => {
               Logged
             </span>
           )}
+
+          <button
+            onClick={handleLogout}
+            className="border border-[#c0392b]/30 hover:bg-[#c0392b]/15 active:bg-[#c0392b]/25
+                       text-[#e74c3c] font-mono text-xs font-semibold
+                       px-3 py-2 rounded-lg transition-all focus:outline-none"
+            aria-label="Log out of application"
+          >
+            Logout
+          </button>
         </div>
       </header>
 
