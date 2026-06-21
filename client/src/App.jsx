@@ -14,8 +14,9 @@ import { AuthProvider } from './context/AuthContext.jsx';
 import ProtectedRoute from './components/layout/ProtectedRoute.jsx';
 
 // Lazy-load pages so the auth page loads instantly on cold start
-const AuthPage   = lazy(() => import('./pages/AuthPage.jsx'));
-const Dashboard  = lazy(() => import('./components/Dashboard.jsx'));
+const AuthPage    = lazy(() => import('./pages/AuthPage.jsx'));
+const Dashboard   = lazy(() => import('./components/Dashboard.jsx'));
+const LandingPage = lazy(() => import('./pages/LandingPage.jsx'));
 
 // ─── Full-screen spinner shown during code-splitting loads ────────────────────
 const PageLoader = () => (
@@ -35,6 +36,7 @@ const App = () => (
       <Suspense fallback={<PageLoader />}>
         <Routes>
           {/* Public */}
+          <Route path="/" element={<LandingPage />} />
           <Route path="/auth" element={<AuthPage />} />
 
           {/* Protected */}
@@ -47,8 +49,8 @@ const App = () => (
             }
           />
 
-          {/* Catch-all: redirect root to dashboard (ProtectedRoute handles the auth gate) */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          {/* Catch-all: redirect root to landing page */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
